@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -14,6 +15,9 @@ public class JoinRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @Column(name = "uid", columnDefinition = "VARCHAR(255)", updatable = false, nullable = false)
+	private String uid = UUID.randomUUID().toString();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trip_post_id", nullable = false)
@@ -44,6 +48,9 @@ public class JoinRequest {
 
     @Column(length = 100)
     private String status;
+    
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean deleted;
 
     @Column(name = "created_date")
     private LocalDateTime createdDate;

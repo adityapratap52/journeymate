@@ -1,6 +1,8 @@
-package com.journeymate.controller.user;
+	package com.journeymate.controller.user;
 
+import com.journeymate.dto.UserDTO;
 import com.journeymate.model.user.User;
+import com.journeymate.service.ContextService;
 import com.journeymate.service.UserService;
 import com.journeymate.utils.ITag;
 
@@ -10,7 +12,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +25,11 @@ import java.util.List;
 @RequestMapping("/api/users")
 @Tag(name = ITag.USER_TAG_NAME, description = ITag.USER_TAG_DESCRIPTION)
 @SecurityRequirement(name = "bearerAuth")
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    private final ContextService contextService;
 
     @Operation(
         summary = ITag.USER_GET_ALL_SUMMARY,
@@ -69,12 +71,10 @@ public class UserController {
             )
         }
     )
-    @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @userService.getUserById(#id).get().username == authentication.name")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        return userService.getUserById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @GetMapping("/getUserByUid/{uid}")
+    @PreAuthorize("hasRole('ADMIN') or authentication.name != null")
+    public ResponseEntity<UserDTO> getUserById(@PathVariable String uid) {
+        return new ResponseEntity<>(userService.getUserByUid(uid), HttpStatus.OK);
     }
 
     @Operation(

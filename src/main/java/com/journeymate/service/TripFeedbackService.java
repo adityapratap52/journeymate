@@ -44,8 +44,8 @@ public class TripFeedbackService {
 
         TripFeedback feedback = new TripFeedback();
         feedback.setTripPost(tripPost);
-        feedback.setFromUser(fromUser);
-        feedback.setToUser(toUser);
+        feedback.setCreatedBy(fromUser);
+        feedback.setModifiedBy(toUser);
         feedback.setRating(feedbackDTO.getRating());
         feedback.setComment(feedbackDTO.getComment());
         
@@ -76,14 +76,14 @@ public class TripFeedbackService {
 
     @Transactional(readOnly = true)
     public List<TripFeedbackDTO> getFeedbackByFromUserId(Long fromUserId) {
-        return tripFeedbackRepository.findByFromUserId(fromUserId).stream()
+        return tripFeedbackRepository.findByCreatedById(fromUserId).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public List<TripFeedbackDTO> getFeedbackByToUserId(Long toUserId) {
-        return tripFeedbackRepository.findByToUserId(toUserId).stream()
+        return tripFeedbackRepository.findByModifiedById(toUserId).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
@@ -117,8 +117,8 @@ public class TripFeedbackService {
         TripFeedbackDTO dto = new TripFeedbackDTO();
         dto.setId(feedback.getId());
         dto.setTripPostId(feedback.getTripPost().getId());
-        dto.setFromUserId(feedback.getFromUser().getId());
-        dto.setToUserId(feedback.getToUser().getId());
+        dto.setFromUserId(feedback.getCreatedBy().getId());
+        dto.setToUserId(feedback.getModifiedBy().getId());
         dto.setRating(feedback.getRating());
         dto.setComment(feedback.getComment());
         dto.setCreatedDate(feedback.getCreatedDate());

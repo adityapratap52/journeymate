@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -15,6 +16,9 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @Column(name = "uid", columnDefinition = "VARCHAR(255)", updatable = false, nullable = false)
+	private String uid = UUID.randomUUID().toString();
 
     @Column(unique = true, nullable = false, length = 50)
     private String username;
@@ -28,7 +32,7 @@ public class User {
     @Column(name = "full_name", length = 100)
     private String fullName;
 
-    @Column(name = "mobile_no", length = 20)
+    @Column(name = "mobile_no", length = 10)
     private String mobileNo;
 
     @Column(length = 100)
@@ -38,14 +42,23 @@ public class User {
 
     private Integer age;
 
-    @Column(length = 100)
+    @Column(length = 20)
     private String gender;
+    
+    @Column(name = "profile_image")
+    private String profileImage;
 
     @Column(name = "created_date")
     private LocalDateTime createdDate;
 
     @Column(name = "modified_date")
     private LocalDateTime modifiedDate;
+    
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private boolean enabled;
+    
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean deleted;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

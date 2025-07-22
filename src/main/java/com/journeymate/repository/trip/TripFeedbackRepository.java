@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface TripFeedbackRepository extends JpaRepository<TripFeedback, Long> {
     List<TripFeedback> findByTripPostId(Long tripPostId);
-    List<TripFeedback> findByFromUserId(Long fromUserId);
-    List<TripFeedback> findByToUserId(Long toUserId);
+    List<TripFeedback> findByCreatedById(Long fromUserId);
+    List<TripFeedback> findByModifiedById(Long toUserId);
 }
